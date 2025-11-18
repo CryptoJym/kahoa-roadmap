@@ -1,0 +1,72 @@
+{
+  "timestamp": "2025-11-16T16:48:40.116Z",
+  "scrollTests": [
+    {
+      "camp": 1,
+      "y": -20.484375,
+      "pass": true
+    },
+    {
+      "camp": 2,
+      "y": 7.75,
+      "pass": true
+    },
+    {
+      "camp": 3,
+      "y": -1.015625,
+      "pass": true
+    },
+    {
+      "camp": 4,
+      "y": 0.21875,
+      "pass": true
+    },
+    {
+      "camp": 5,
+      "y": -0.546875,
+      "pass": true
+    },
+    {
+      "camp": 6,
+      "y": -0.3125,
+      "pass": true
+    },
+    {
+      "camp": 7,
+      "y": -2.078125,
+      "pass": true
+    },
+    {
+      "camp": 8,
+      "y": 0.15625,
+      "pass": true
+    }
+  ],
+  "textTests": [
+    {
+      "name": "Header \"AI Transformation\"",
+      "pass": true
+    },
+    {
+      "name": "Camp 1 \"Training\"",
+      "pass": true
+    },
+    {
+      "name": "Camp 2 \"Programs\"",
+      "pass": true
+    },
+    {
+      "name": "Camp 3 \"Scaling\"",
+      "pass": true
+    },
+    {
+      "name": "Footer \"Organization\"",
+      "pass": true
+    }
+  ],
+  "summary": {
+    "scrollPass": true,
+    "textPass": true,
+    "overallPass": true
+  }
+}

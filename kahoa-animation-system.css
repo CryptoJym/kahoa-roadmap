@@ -1,0 +1,624 @@
+/**
+ * Kahoa Roadmap - GPU-Accelerated Animation System
+ * Target: 60fps on all devices
+ * Method: Transform + opacity only (GPU-accelerated)
+ */
+
+/* ============================================
+   PERFORMANCE FOUNDATION
+   ============================================ */
+
+/* Optimize rendering performance */
+* {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000px;
+  perspective: 1000px;
+}
+
+/* Enable GPU acceleration for specific elements */
+.gpu-accelerated {
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+/* Container containment for performance isolation */
+.camp {
+  contain: layout style paint;
+}
+
+/* ============================================
+   CUSTOM EASING CURVES
+   ============================================ */
+
+:root {
+  /* Organic easing curves */
+  --ease-smooth: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-expo-out: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-circ-out: cubic-bezier(0.075, 0.82, 0.165, 1);
+  --ease-back-out: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Animation durations */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-slower: 800ms;
+
+  /* Stagger delays */
+  --stagger-1: 50ms;
+  --stagger-2: 100ms;
+  --stagger-3: 150ms;
+  --stagger-4: 200ms;
+}
+
+/* ============================================
+   CAMP EXPAND/COLLAPSE - GPU ACCELERATED
+   ============================================ */
+
+/* Replace max-height with transform-based approach */
+.camp-overview,
+.camp-detail {
+  /* Hide content initially */
+  transform: scaleY(0);
+  transform-origin: top center;
+  opacity: 0;
+
+  /* GPU-accelerated transitions only */
+  transition:
+    transform var(--duration-slow) var(--ease-expo-out),
+    opacity var(--duration-normal) var(--ease-smooth);
+
+  /* Prevent content overflow during animation */
+  overflow: hidden;
+
+  /* Height management without max-height */
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--duration-slow) var(--ease-expo-out);
+}
+
+.camp-overview > *,
+.camp-detail > * {
+  /* Nested content container for grid trick */
+  min-height: 0;
+  overflow: hidden;
+}
+
+.camp-overview.expanded,
+.camp-detail.expanded {
+  /* Expand using GPU-accelerated transform */
+  transform: scaleY(1);
+  opacity: 1;
+
+  /* Grid expansion */
+  grid-template-rows: 1fr;
+
+  /* Padding applied after transform completes (no transition) */
+  padding: var(--space-6);
+}
+
+.camp-detail.expanded {
+  background: var(--gray-50);
+}
+
+/* Alternative: Clip-path reveal (also GPU-accelerated) */
+.camp-overview-alt,
+.camp-detail-alt {
+  clip-path: inset(0 0 100% 0);
+  opacity: 0;
+
+  transition:
+    clip-path var(--duration-slow) var(--ease-expo-out),
+    opacity var(--duration-normal) var(--ease-smooth);
+}
+
+.camp-overview-alt.expanded,
+.camp-detail-alt.expanded {
+  clip-path: inset(0 0 0 0);
+  opacity: 1;
+}
+
+/* ============================================
+   CAMP HEADER INTERACTIONS
+   ============================================ */
+
+.camp-header {
+  position: relative;
+  overflow: hidden;
+
+  /* Remove background transition */
+  background: var(--gray-50);
+  transition: none; /* Remove expensive background transitions */
+}
+
+/* Pseudo-element for hover effect (GPU-accelerated) */
+.camp-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gray-100);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-smooth);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.camp-header:hover::before {
+  opacity: 1;
+}
+
+/* Ensure content sits above pseudo-element */
+.camp-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================
+   BUTTON MICRO-INTERACTIONS
+   ============================================ */
+
+.expand-btn,
+.collapse-btn,
+.cta-box a,
+footer a {
+  position: relative;
+  overflow: hidden;
+
+  /* GPU-accelerated transitions only */
+  transition:
+    transform var(--duration-fast) var(--ease-smooth),
+    box-shadow var(--duration-fast) var(--ease-smooth);
+
+  /* Browser hint for transform optimization */
+  will-change: transform;
+}
+
+/* Hover: Lift effect */
+.expand-btn:hover,
+.collapse-btn:hover,
+.cta-box a:hover,
+footer a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Active: Press down effect */
+.expand-btn:active,
+.collapse-btn:active,
+.cta-box a:active,
+footer a:active {
+  transform: translateY(0) scale(0.98);
+  transition-duration: var(--duration-fast);
+}
+
+/* Ripple effect on click */
+.expand-btn::after,
+.collapse-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width var(--duration-slow) var(--ease-expo-out),
+              height var(--duration-slow) var(--ease-expo-out),
+              opacity var(--duration-slow) var(--ease-smooth);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.expand-btn:active::after,
+.collapse-btn:active::after {
+  width: 300px;
+  height: 300px;
+  opacity: 1;
+  transition-duration: 0s; /* Instant start */
+}
+
+/* ============================================
+   SVG WAYPOINT ANIMATIONS
+   ============================================ */
+
+.waypoint {
+  cursor: pointer;
+
+  /* Optimize SVG transforms */
+  transform-origin: center;
+  transform-box: fill-box;
+
+  /* Specific properties only (not 'all') */
+  transition: transform var(--duration-normal) var(--ease-back-out);
+
+  /* Browser optimization hint */
+  will-change: transform;
+}
+
+.waypoint circle {
+  fill: var(--gray-300);
+  stroke: var(--gray-600);
+  stroke-width: 2;
+
+  transition:
+    fill var(--duration-fast) var(--ease-smooth),
+    stroke var(--duration-fast) var(--ease-smooth);
+}
+
+/* Hover: Scale up + glow */
+.waypoint:hover {
+  transform: scale(1.15);
+}
+
+.waypoint:hover circle {
+  fill: var(--color-blue);
+  stroke: var(--color-blue);
+  filter: drop-shadow(0 0 8px rgba(25, 85, 237, 0.6));
+}
+
+/* Active state */
+.waypoint.active {
+  transform: scale(1.2);
+  animation: pulse-waypoint 2s var(--ease-smooth) infinite;
+}
+
+.waypoint.active circle {
+  fill: var(--color-blue);
+  stroke: var(--color-blue);
+  filter: drop-shadow(0 0 12px rgba(25, 85, 237, 0.8));
+}
+
+/* Completed state */
+.waypoint.completed circle {
+  fill: var(--gray-600);
+  stroke: var(--gray-600);
+}
+
+/* Pulse animation for active waypoint */
+@keyframes pulse-waypoint {
+  0%, 100% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+}
+
+/* ============================================
+   ELEVATION PATH PARALLAX
+   ============================================ */
+
+#elevation-map {
+  /* Enable 3D transforms for parallax */
+  transform-style: preserve-3d;
+}
+
+.elevation-path {
+  /* Animate stroke-dashoffset for drawing effect */
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  animation: draw-path 2s var(--ease-expo-out) forwards;
+  animation-delay: 500ms;
+
+  /* Parallax depth */
+  transform: translateZ(-50px) scale(1.05);
+}
+
+@keyframes draw-path {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ============================================
+   PAGE LOAD SEQUENCE (ORCHESTRATED)
+   ============================================ */
+
+/* Hero header fade in */
+header {
+  animation: fade-in var(--duration-slower) var(--ease-smooth) forwards;
+  animation-delay: 0ms;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Elevation map slides up */
+#elevation-map {
+  animation: slide-up var(--duration-slower) var(--ease-expo-out) forwards;
+  animation-delay: 300ms;
+  opacity: 0;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Camps stagger in */
+.camp:nth-child(1) { animation-delay: 500ms; }
+.camp:nth-child(2) { animation-delay: 600ms; }
+.camp:nth-child(3) { animation-delay: 700ms; }
+.camp:nth-child(4) { animation-delay: 800ms; }
+.camp:nth-child(5) { animation-delay: 900ms; }
+.camp:nth-child(6) { animation-delay: 1000ms; }
+.camp:nth-child(7) { animation-delay: 1100ms; }
+.camp:nth-child(8) { animation-delay: 1200ms; }
+
+/* Enhanced fade-up animation */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.fade-up {
+  animation: fadeUp var(--duration-slow) var(--ease-expo-out) forwards;
+  opacity: 0;
+}
+
+/* ============================================
+   DETAIL SECTION STAGGER
+   ============================================ */
+
+/* When camp detail expands, stagger child sections */
+.camp-detail.expanded .detail-section {
+  animation: fade-slide-in var(--duration-slow) var(--ease-expo-out) forwards;
+  opacity: 0;
+}
+
+.camp-detail.expanded .detail-section:nth-child(1) { animation-delay: 100ms; }
+.camp-detail.expanded .detail-section:nth-child(2) { animation-delay: 200ms; }
+.camp-detail.expanded .detail-section:nth-child(3) { animation-delay: 300ms; }
+.camp-detail.expanded .detail-section:nth-child(4) { animation-delay: 400ms; }
+.camp-detail.expanded .detail-section:nth-child(5) { animation-delay: 500ms; }
+
+@keyframes fade-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ============================================
+   STAT CARD HOVER EFFECTS
+   ============================================ */
+
+.stat-card {
+  position: relative;
+  transition:
+    transform var(--duration-normal) var(--ease-back-out),
+    box-shadow var(--duration-normal) var(--ease-smooth);
+
+  will-change: transform;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Tilt effect based on mouse position */
+.stat-card.tilt {
+  transform-style: preserve-3d;
+}
+
+/* ============================================
+   SCROLL ANIMATIONS
+   ============================================ */
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Scroll-linked animations (experimental - Chrome only) */
+@supports (animation-timeline: scroll()) {
+  .parallax-element {
+    animation: parallax-scroll linear;
+    animation-timeline: scroll();
+  }
+
+  @keyframes parallax-scroll {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-100px);
+    }
+  }
+}
+
+/* ============================================
+   MAGNETIC BUTTON EFFECT
+   ============================================ */
+
+.expand-btn.magnetic {
+  transition: transform var(--duration-fast) var(--ease-smooth);
+}
+
+/* Applied via JavaScript based on cursor position */
+.expand-btn.magnetic-active {
+  /* Transform set dynamically in JS */
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+.btn-loading {
+  position: relative;
+  pointer-events: none;
+  color: transparent;
+}
+
+.btn-loading::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY - REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Disable parallax and complex transforms */
+  .elevation-path {
+    animation: none !important;
+    stroke-dashoffset: 0;
+  }
+
+  .waypoint {
+    animation: none !important;
+  }
+}
+
+/* ============================================
+   PERFORMANCE MONITORING OVERLAYS (DEV ONLY)
+   ============================================ */
+
+.perf-overlay {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #0f0;
+  padding: 10px;
+  font-family: monospace;
+  font-size: 12px;
+  z-index: 9999;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.perf-overlay.fps-good { color: #0f0; }
+.perf-overlay.fps-ok { color: #ff0; }
+.perf-overlay.fps-bad { color: #f00; }
+
+/* ============================================
+   WILL-CHANGE OPTIMIZATION
+   ============================================ */
+
+/* Only hint will-change when interaction is likely */
+.camp-header:hover .expand-btn,
+.waypoint:hover,
+.stat-card:hover,
+.camp.expanding .camp-overview,
+.camp.expanding .camp-detail {
+  will-change: transform;
+}
+
+/* Remove will-change after animation completes */
+.camp-overview.expanded,
+.camp-detail.expanded,
+.waypoint.settled {
+  will-change: auto;
+}
+
+/* ============================================
+   GPU LAYER PROMOTION (STRATEGIC)
+   ============================================ */
+
+/* Promote to own layer for better compositing */
+.camp-overview.expanded,
+.camp-detail.expanded,
+#elevation-map,
+.waypoint.active {
+  /* Force GPU layer */
+  transform: translate3d(0, 0, 0);
+}
+
+/* ============================================
+   RESPONSIVE ANIMATIONS
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* Reduce animation complexity on mobile */
+  :root {
+    --duration-fast: 100ms;
+    --duration-normal: 200ms;
+    --duration-slow: 300ms;
+  }
+
+  /* Disable parallax on mobile */
+  .elevation-path {
+    transform: none;
+  }
+
+  /* Simplify hover effects (tap targets) */
+  .stat-card:hover {
+    transform: translateY(-4px) scale(1.02);
+  }
+}
+
+/* ============================================
+   PRINT STYLES (NO ANIMATIONS)
+   ============================================ */
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .camp-overview,
+  .camp-detail {
+    transform: none !important;
+    opacity: 1 !important;
+    display: block !important;
+  }
+}

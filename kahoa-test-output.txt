@@ -1,0 +1,27 @@
+
+<--- Last few GCs --->
+
+[89798:0x110008000]    30277 ms: Mark-Compact (reduce) 2046.7 (2085.9) -> 2046.2 (2083.6) MB, pooled: 0 MB, 629.62 / 0.00 ms  (+ 9.8 ms in 0 steps since start of marking, biggest step 0.0 ms, walltime since start of marking 643 ms) (average mu = 0.169, cu
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0x10476b484 node::OOMErrorHandler(char const*, v8::OOMDetails const&) [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+ 2: 0x104931a48 v8::internal::V8::FatalProcessOutOfMemory(v8::internal::Isolate*, char const*, v8::OOMDetails const&) [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+ 3: 0x104b3f9a0 v8::internal::Heap::stack() [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+ 4: 0x104b55e18 v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, v8::internal::GarbageCollectionReason, v8::GCCallbackFlags)::$_1::operator()() const [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+ 5: 0x104b556ac void heap::base::Stack::SetMarkerAndCallbackImpl<v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, v8::internal::GarbageCollectionReason, v8::GCCallbackFlags)::$_1>(heap::base::Stack*, void*, void const*) [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+ 6: 0x10530f420 PushAllRegistersAndIterateStack [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+ 7: 0x104b3db60 v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, v8::internal::GarbageCollectionReason, v8::GCCallbackFlags) [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+ 8: 0x104b92740 v8::internal::MinorGCJob::Task::RunInternal() [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+ 9: 0x1047e6db8 node::PerIsolatePlatformData::RunForegroundTask(std::__1::unique_ptr<v8::Task, std::__1::default_delete<v8::Task>>) [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+10: 0x1047e5e08 node::PerIsolatePlatformData::FlushForegroundTasksInternal() [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+11: 0x10533ab84 uv__async_io [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+12: 0x10534e398 uv__io_poll [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+13: 0x10533b0ec uv_run [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+14: 0x104672508 node::SpinEventLoopInternal(node::Environment*) [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+15: 0x1047b445c node::NodeMainInstance::Run() [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+16: 0x1047294cc node::Start(int, char**) [/Users/jamesbrady/.nvm/versions/node/v22.15.0/bin/node]
+17: 0x194a06b98 start [/usr/lib/dyld]

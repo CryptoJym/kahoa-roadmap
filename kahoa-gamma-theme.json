@@ -1,0 +1,71 @@
+{
+  "theme_name": "Kahoa Professional",
+  "description": "A modern, minimalist theme based on Kahoa.ai brand identity - focused on practical AI training and high-performance teams",
+  "brand_identity": {
+    "company": "Kahoa",
+    "tagline": "The AI Training Partner for High-Performance Teams",
+    "core_message": "AI isn't magic. It's a skill."
+  },
+  "color_palette": {
+    "primary": "#000000",
+    "secondary": "#1955ED",
+    "background": "#FFFFFF",
+    "accent": "#1955ED",
+    "text_primary": "#000000",
+    "text_secondary": "#666666",
+    "gradient_start": "#FFFFFF",
+    "gradient_end": "#1955ED"
+  },
+  "typography": {
+    "heading_font": "Modern sans-serif (Inter, SF Pro, or Helvetica)",
+    "body_font": "Clean sans-serif",
+    "heading_sizes": {
+      "h1": "4.7rem",
+      "h2": "3.5rem",
+      "h3": "2.5rem",
+      "h4": "1.8rem"
+    },
+    "body_size": "1rem to 1.2rem",
+    "line_height": "1.5 to 1.6",
+    "text_treatment": "Balanced wrapping, generous spacing"
+  },
+  "design_principles": {
+    "style": "Modern, minimalist, tech-focused",
+    "spacing": "Generous white space",
+    "effects": "Subtle gradients, soft shadows",
+    "shapes": "Rounded corners (8-12px radius)",
+    "layout": "Clean grid, responsive, adaptive"
+  },
+  "visual_elements": {
+    "imagery": "Professional stock photography, tech-focused",
+    "icons": "Simple, minimalist line icons",
+    "backgrounds": "Blue/white gradients, blurred circles",
+    "buttons": "Rounded, with hover effects",
+    "cards": "Subtle shadows, rounded corners"
+  },
+  "brand_personality": [
+    "Authoritative",
+    "Pragmatic",
+    "Innovative",
+    "Supportive",
+    "Expertise-driven"
+  ],
+  "content_themes": [
+    "Practical AI skill development",
+    "Enterprise-ready AI training",
+    "Role-specific learning paths",
+    "Team empowerment",
+    "Measurable AI integration"
+  ],
+  "gamma_presentation_settings": {
+    "format": "presentation",
+    "text_mode": "generate",
+    "text_amount": "medium",
+    "tone": "professional",
+    "image_source": "aiGenerated",
+    "image_style": "professional, tech-focused, modern office",
+    "card_dimensions": "16:9",
+    "card_split": "auto",
+    "num_cards": 10
+  }
+}

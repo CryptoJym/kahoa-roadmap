@@ -1,0 +1,63 @@
+Starting Kahoa Roadmap Tests...
+
+=== TEST 1: SCROLL POSITION FOR ALL 8 CAMPS ===
+
+Camp 1: y=-20.48px ✓ PASS
+Camp 2: y=7.75px ✓ PASS
+Camp 3: y=-1.02px ✓ PASS
+Camp 4: y=0.22px ✓ PASS
+Camp 5: y=-0.55px ✓ PASS
+Camp 6: y=-0.31px ✓ PASS
+Camp 7: y=-2.08px ✓ PASS
+Camp 8: y=0.16px ✓ PASS
+
+Scroll Position Tests: ALL PASS ✓
+
+=== TEST 2: TEXT DESCENDER CLIPPING ===
+
+Header "AI Transformation":
+  Text: "Kahoa AI Transformation Roadma..."
+  Line Height: 2.00 ✓
+  Padding Bottom: 24.0px ✓
+  Overflow: visible ✓
+  Overall: PASS ✓
+
+Camp 1 "Training":
+  Text: "Camp 1: Overview..."
+  Line Height: 2.00 ✓
+  Padding Bottom: 14.4px ✓
+  Overflow: visible ✓
+  Overall: PASS ✓
+
+Camp 2 "Programs":
+  Text: "Camp 2: AI Audit..."
+  Line Height: 2.00 ✓
+  Padding Bottom: 14.4px ✓
+  Overflow: visible ✓
+  Overall: PASS ✓
+
+Camp 3 "Scaling":
+  Text: "Camp 3: AI Boot Camp..."
+  Line Height: 2.00 ✓
+  Padding Bottom: 14.4px ✓
+  Overflow: visible ✓
+  Overall: PASS ✓
+
+Footer "Organization":
+  Text: "Ready to Transform Your Organi..."
+  Line Height: 2.00 ✓
+  Padding Bottom: 18.7px ✓
+  Overflow: visible ✓
+  Overall: PASS ✓
+
+Text Clipping Tests: ALL PASS ✓
+
+=== FINAL SUMMARY ===
+
+Scroll Position Tests: ✓ PASS
+Text Clipping Tests: ✓ PASS
+
+🎉 ALL TESTS PASSED! 🎉
+
+Results saved to: kahoa-final-test-results.json
+
