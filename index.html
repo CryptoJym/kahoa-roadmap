@@ -988,7 +988,6 @@
             e.stopPropagation(); this.collapse(btn.closest('.camp').dataset.camp);
         }));
         
-        // **FIX**: Attach listener to dynamically created waypoints
         this.mountain.waypoints.forEach(wp => wp.addEventListener('click', () => {
             this.scrollToCamp(wp.dataset.camp);
         }));
@@ -1001,6 +1000,7 @@
         camp.classList.add('active');
         camp.querySelector('.camp-overview').classList.add('expanded');
         this.mountain.updateWaypoints(id);
+        // No auto-scroll here; we let user scroll or use scrollToCamp for waypoints
       }
       
       expandDetail(id) {
@@ -1019,9 +1019,21 @@
       }
 
       scrollToCamp(id) {
-        this.expandOverview(id);
+        // 1. Collapse current if different
+        if (this.activeId && this.activeId !== id) {
+           this.collapse(this.activeId);
+        }
+        
         const camp = document.querySelector(`.camp[data-camp="${id}"]`);
-        setTimeout(() => camp.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+        
+        // 2. Scroll to top immediately
+        camp.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // 3. Expand after a short delay to allow scroll to start/finish
+        // This prevents the expansion from pushing the scroll position away
+        setTimeout(() => {
+            this.expandOverview(id);
+        }, 300);
       }
     }
 
